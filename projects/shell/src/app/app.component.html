@@ -1,0 +1,54 @@
+<div class="app-shell">
+  <header class="app-shell__topbar">
+    <div class="app-shell__brand">
+      <span class="app-shell__brand-mark" aria-hidden="true"></span>
+      <span class="app-shell__brand-text">{{ brand }}</span>
+    </div>
+    <div class="app-shell__user" aria-label="Signed in user">
+      <span class="app-shell__user-avatar" aria-hidden="true">LC</span>
+    </div>
+  </header>
+
+  <div class="app-shell__body">
+    <nav class="app-shell__sidebar" aria-label="Primary">
+      <ul class="app-shell__nav">
+        <li>
+          <span class="app-shell__nav-item app-shell__nav-item--disabled">
+            Accounts
+            <span class="app-shell__nav-badge">Soon</span>
+          </span>
+        </li>
+        <li>
+          <a
+            class="app-shell__nav-item"
+            routerLink="/payments"
+            routerLinkActive="app-shell__nav-item--active"
+          >
+            Payments
+          </a>
+        </li>
+        <li>
+          <span class="app-shell__nav-item app-shell__nav-item--disabled">
+            Wealth
+            <span class="app-shell__nav-badge">Soon</span>
+          </span>
+        </li>
+        <li>
+          <span class="app-shell__nav-item app-shell__nav-item--disabled">
+            Insights
+            <span class="app-shell__nav-badge">Soon</span>
+          </span>
+        </li>
+      </ul>
+    </nav>
+
+    <main class="app-shell__content">
+      <router-outlet />
+    </main>
+  </div>
+</div>
+
+<!-- Lirui Cao :品牌名 + 一个用户头像 "LC"(Lirui Cao 的缩写,my name)
+Sidebar:4 个导航项,只有 Payments 是可点的 <a>,其他三个是 <span> 带 "Soon" 徽章
+Main:<router-outlet /> 渲染当前路由(也就是 Payments MFE)
+BEM 命名 + 语义化 HTML + ARIA 标签(无障碍,资深前端习惯) -->
