@@ -5,7 +5,7 @@ import {
   effect,
   inject,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DecimalPipe } from '@angular/common';
@@ -32,6 +32,7 @@ import {
 export class ReviewComponent {
   private readonly store = inject(Store);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly recipient = toSignal(this.store.select(selectSelectedRecipient), {
     initialValue: null,
@@ -68,7 +69,7 @@ export class ReviewComponent {
   constructor() {
     effect(() => {
       if (this.status() === 'submitted') {
-        this.router.navigate(['/e-transfer/success']);
+        this.router.navigate(['../success'], { relativeTo: this.route });
       }
     });
   }
@@ -82,6 +83,6 @@ export class ReviewComponent {
   }
 
   onBack(): void {
-    this.router.navigate(['/e-transfer/amount']);
+    this.router.navigate(['../amount'], { relativeTo: this.route });
   }
 }

@@ -4,7 +4,7 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DatePipe, DecimalPipe } from '@angular/common';
@@ -17,7 +17,7 @@ import {
 @Component({
   selector: 'app-success',
   standalone: true,
-  imports: [DatePipe, DecimalPipe],
+  imports: [DatePipe, DecimalPipe, RouterLink],
   templateUrl: './success.component.html',
   styleUrl: './success.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,6 +25,7 @@ import {
 export class SuccessComponent {
   private readonly store = inject(Store);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly receipt = toSignal(this.store.select(selectReceipt), {
     initialValue: null,
@@ -42,11 +43,18 @@ export class SuccessComponent {
    */
   onSendAnother(): void {
     this.store.dispatch(ETransferActions.draftReset());
-    this.router.navigate(['/e-transfer/recipient']);
+    this.router.navigate(['../recipient'], { relativeTo: this.route });
   }
 
   onDone(): void {
     this.store.dispatch(ETransferActions.draftReset());
-    this.router.navigate(['/']);
+
+    // Navigate to Payments root. We use the Router's url manipulation to
+    // strip the e-transfer segment from the current URL — this works
+    // regardless of whether the host mounts Payments at /payments, /banking,
+    // or anywhere else.
+    const currentUrl = this.router.url;
+    const paymentsRoot = currentUrl.replace(/\/e-transfer.*$/, '');
+    this.router.navigateByUrl(paymentsRoot || '/');
   }
 }

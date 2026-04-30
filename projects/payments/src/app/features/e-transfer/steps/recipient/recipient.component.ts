@@ -4,7 +4,7 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -26,6 +26,7 @@ import {
 export class RecipientComponent {
   private readonly store = inject(Store);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly recipients = toSignal(this.store.select(selectRecipients), {
     initialValue: [],
@@ -46,6 +47,6 @@ export class RecipientComponent {
   }
 
   onContinue(): void {
-    this.router.navigate(['/e-transfer/amount']);
+    this.router.navigate(['../amount'], { relativeTo: this.route });
   }
 }

@@ -4,7 +4,7 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -30,6 +30,7 @@ import { DecimalPipe } from '@angular/common';
 export class AmountComponent {
   private readonly store = inject(Store);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
 
   readonly limits = ETRANSFER_LIMITS;
@@ -112,10 +113,10 @@ export class AmountComponent {
       }),
     );
 
-    this.router.navigate(['/e-transfer/review']);
+    this.router.navigate(['../review'], { relativeTo: this.route });
   }
 
   onBack(): void {
-    this.router.navigate(['/e-transfer/recipient']);
+    this.router.navigate(['../recipient'], { relativeTo: this.route });
   }
 }
