@@ -1,0 +1,34 @@
+<app-flow-shell
+  currentStep="recipient"
+  title="Send to"
+  [canContinue]="canContinue()"
+  [hideBack]="true"
+  (continueClick)="onContinue()"
+>
+  <ul class="recipient-list" role="listbox" aria-label="Recipients">
+    @for (r of recipients(); track r.id) {
+      <li
+        class="recipient-list__item"
+        [class.recipient-list__item--selected]="selectedId() === r.id"
+        role="option"
+        [attr.aria-selected]="selectedId() === r.id"
+        tabindex="0"
+        (click)="selectRecipient(r.id)"
+        (keyup.enter)="selectRecipient(r.id)"
+      >
+        <div class="recipient-list__avatar" aria-hidden="true">
+          {{ r.name.charAt(0) }}
+        </div>
+        <div class="recipient-list__info">
+          <div class="recipient-list__name">{{ r.name }}</div>
+          <div class="recipient-list__handle">{{ r.handle }}</div>
+        </div>
+        @if (r.autoDeposit) {
+          <span class="recipient-list__badge" title="Auto-deposit enabled">
+            Auto-deposit
+          </span>
+        }
+      </li>
+    }
+  </ul>
+</app-flow-shell>

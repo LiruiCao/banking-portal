@@ -1,0 +1,51 @@
+<app-flow-shell
+  currentStep="review"
+  title="Review & Confirm"
+  [canContinue]="canContinue()"
+  [continueLabel]="continueLabel()"
+  (continueClick)="onContinue()"
+  (backClick)="onBack()"
+>
+  <div class="review">
+    @if (recipient(); as r) {
+      <div class="review__row">
+        <div class="review__label">To</div>
+        <div class="review__value">
+          <strong>{{ r.name }}</strong>
+          <div class="review__sub">{{ r.handle }}</div>
+        </div>
+      </div>
+    }
+
+    <div class="review__row">
+      <div class="review__label">Amount</div>
+      <div class="review__amount">
+        ${{ amountCents() / 100 | number: "1.2-2" }}
+        <span class="review__currency">CAD</span>
+      </div>
+    </div>
+
+    @if (account(); as a) {
+      <div class="review__row">
+        <div class="review__label">From</div>
+        <div class="review__value">
+          {{ a.nickname }}
+          <div class="review__sub">{{ a.maskedNumber }}</div>
+        </div>
+      </div>
+    }
+
+    @if (draft()?.memo) {
+      <div class="review__row">
+        <div class="review__label">Message</div>
+        <div class="review__value review__memo">{{ draft()?.memo }}</div>
+      </div>
+    }
+
+    @if (error(); as err) {
+      <div class="review__error" role="alert">
+        {{ err }}
+      </div>
+    }
+  </div>
+</app-flow-shell>

@@ -1,0 +1,52 @@
+<section class="flow-shell">
+  <header class="flow-shell__progress" aria-label="Transfer progress">
+    @for (step of steps(); track step.key; let i = $index) {
+    <!-- 老写法 -->
+    <!-- <div *ngFor="let step of steps(); let i = index; trackBy: trackByKey"> -->
+    <div
+      class="flow-shell__step"
+      [class.flow-shell__step--active]="isActive(i)"
+      [class.flow-shell__step--completed]="isCompleted(i)"
+    >
+      <span class="flow-shell__step-marker" aria-hidden="true">
+        @if (isCompleted(i)) {
+        <span class="flow-shell__step-check">✓</span>
+        } @else {
+        {{ i + 1 }}
+        }
+      </span>
+      <span class="flow-shell__step-label">{{ step.label }}</span>
+    </div>
+    }
+  </header>
+
+  <div class="flow-shell__body">
+    <h1 class="flow-shell__title">{{ title() }}</h1>
+    <div class="flow-shell__content">
+      <ng-content />
+    </div>
+  </div>
+
+  <footer class="flow-shell__actions">
+    @if (!hideBack()) {
+    <button
+      type="button"
+      class="flow-shell__btn flow-shell__btn--ghost"
+      (click)="onBack()"
+    >
+      Back
+    </button>
+    } @else {
+    <span></span>
+    }
+
+    <button
+      type="button"
+      class="flow-shell__btn flow-shell__btn--primary"
+      [disabled]="!canContinue()"
+      (click)="onContinue()"
+    >
+      {{ continueLabel() }}
+    </button>
+  </footer>
+</section>

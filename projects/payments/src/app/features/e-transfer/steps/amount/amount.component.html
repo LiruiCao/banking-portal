@@ -1,0 +1,76 @@
+<app-flow-shell
+  currentStep="amount"
+  title="Amount and account"
+  [canContinue]="canContinue()"
+  (continueClick)="onContinue()"
+  (backClick)="onBack()"
+>
+  <form [formGroup]="form" class="amount-form">
+    @if (recipient(); as r) {
+      <div class="amount-form__recipient" aria-label="Sending to">
+        Sending to <strong>{{ r.name }}</strong>
+      </div>
+    }
+
+    <div class="amount-form__field">
+      <label for="amount" class="amount-form__label">Amount (CAD)</label>
+      <div class="amount-form__amount-wrap">
+        <span class="amount-form__currency-symbol" aria-hidden="true">$</span>
+        <input
+          id="amount"
+          type="text"
+          inputmode="decimal"
+          formControlName="amount"
+          placeholder="0.00"
+          class="amount-form__input amount-form__input--amount"
+          autocomplete="off"
+        />
+      </div>
+      <div class="amount-form__hint">
+        Min ${{ limits.minCents / 100 | number: "1.2-2" }} · Max ${{
+          limits.maxPerTransferCents / 100 | number: "1.0-0"
+        }}
+        per transfer
+      </div>
+      @if (form.controls.amount.touched && !amountWithinLimits()) {
+        <div class="amount-form__error" role="alert">
+          Enter an amount between ${{
+            limits.minCents / 100 | number: "1.2-2"
+          }}
+          and ${{ limits.maxPerTransferCents / 100 | number: "1.0-0" }}
+        </div>
+      }
+    </div>
+
+    <div class="amount-form__field">
+      <label for="fromAccount" class="amount-form__label">From account</label>
+      <select
+        id="fromAccount"
+        formControlName="fromAccountId"
+        class="amount-form__input amount-form__input--select"
+      >
+        <option value="" disabled>Select an account</option>
+        @for (a of accounts(); track a.id) {
+          <option [value]="a.id">
+            {{ a.nickname }} {{ a.maskedNumber }} —
+            {{ formatBalance(a.balanceCents) }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <div class="amount-form__field">
+      <label for="memo" class="amount-form__label">
+        Message <span class="amount-form__optional">(optional)</span>
+      </label>
+      <textarea
+        id="memo"
+        formControlName="memo"
+        rows="2"
+        maxlength="400"
+        placeholder="What's it for?"
+        class="amount-form__input amount-form__input--textarea"
+      ></textarea>
+    </div>
+  </form>
+</app-flow-shell>

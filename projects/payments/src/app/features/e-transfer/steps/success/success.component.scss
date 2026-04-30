@@ -1,0 +1,145 @@
+:host {
+  display: block;
+}
+
+.success {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+  text-align: center;
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #ecfdf5;
+    color: #0f766e;
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 0 0 1rem;
+  }
+
+  &__amount {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 0.25rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__currency {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #64748b;
+    margin-left: 0.25rem;
+  }
+
+  &__sub {
+    color: #475569;
+    margin: 0 0 2rem;
+    font-size: 0.9375rem;
+  }
+
+  &__details {
+    text-align: left;
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 0 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 1rem;
+    align-items: baseline;
+
+    dt {
+      color: #64748b;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    dd {
+      color: #0f172a;
+      font-size: 0.875rem;
+      margin: 0;
+      word-break: break-word;
+    }
+  }
+
+  &__mono {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  &__btn {
+    height: 40px;
+    padding: 0 1.25rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    border: 1px solid transparent;
+
+    &--primary {
+      background: #0f766e;
+      color: #ffffff;
+
+      &:hover {
+        background: #115e59;
+      }
+    }
+
+    &--ghost {
+      background: transparent;
+      color: #475569;
+      border-color: #cbd5e1;
+
+      &:hover {
+        background: #f1f5f9;
+      }
+    }
+  }
+
+  &__empty {
+    max-width: 480px;
+    margin: 4rem auto;
+    padding: 2rem;
+    text-align: center;
+    color: #64748b;
+
+    a {
+      color: #0f766e;
+      font-weight: 500;
+      text-decoration: none;
+      margin-left: 0.5rem;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

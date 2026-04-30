@@ -1,0 +1,63 @@
+:host {
+  display: block;
+}
+
+.review {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  &__row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 1rem;
+    padding: 0.875rem 1rem;
+    background: #f8fafc;
+    border-radius: 6px;
+  }
+
+  &__label {
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  &__value {
+    color: #0f172a;
+    font-size: 0.9375rem;
+  }
+
+  &__sub {
+    color: #64748b;
+    font-size: 0.8125rem;
+    margin-top: 0.25rem;
+  }
+
+  &__amount {
+    color: #0f172a;
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__currency {
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 400;
+    margin-left: 0.5rem;
+  }
+
+  &__memo {
+    white-space: pre-wrap;
+  }
+
+  &__error {
+    padding: 0.875rem 1rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }
+}

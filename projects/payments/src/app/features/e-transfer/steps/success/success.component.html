@@ -1,0 +1,60 @@
+@if (receipt(); as r) {
+  <section class="success">
+    <div class="success__icon" aria-hidden="true">✓</div>
+
+    <h1 class="success__title">Transfer sent</h1>
+    <p class="success__amount">
+      ${{ amountDisplay() | number: "1.2-2" }}
+      <span class="success__currency">CAD</span>
+    </p>
+    <p class="success__sub">
+      to <strong>{{ r.request.recipient.name }}</strong>
+    </p>
+
+    <dl class="success__details">
+      <div class="success__row">
+        <dt>Confirmation</dt>
+        <dd class="success__mono">{{ r.confirmationNumber }}</dd>
+      </div>
+      <div class="success__row">
+        <dt>Sent</dt>
+        <dd>{{ r.submittedAt | date: "medium" }}</dd>
+      </div>
+      <div class="success__row">
+        <dt>From</dt>
+        <dd>
+          {{ r.request.fromAccount.nickname }}
+          {{ r.request.fromAccount.maskedNumber }}
+        </dd>
+      </div>
+      @if (r.request.memo) {
+        <div class="success__row">
+          <dt>Message</dt>
+          <dd>{{ r.request.memo }}</dd>
+        </div>
+      }
+    </dl>
+
+    <div class="success__actions">
+      <button
+        type="button"
+        class="success__btn success__btn--ghost"
+        (click)="onSendAnother()"
+      >
+        Send another
+      </button>
+      <button
+        type="button"
+        class="success__btn success__btn--primary"
+        (click)="onDone()"
+      >
+        Done
+      </button>
+    </div>
+  </section>
+} @else {
+  <div class="success__empty">
+    No transfer to confirm.
+    <a routerLink="/e-transfer">Start a new transfer</a>
+  </div>
+}
