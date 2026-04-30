@@ -27,10 +27,24 @@
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     padding: 1.5rem;
-    transition: border-color 0.2s ease;
+    transition:
+      border-color 0.15s ease,
+      transform 0.15s ease;
+    text-decoration: none;
+    color: inherit;
+    display: block;
 
     &:hover {
       border-color: #94a3b8;
+    }
+
+    &--active {
+      border-color: #cbd5e1;
+
+      &:hover {
+        border-color: #0f766e;
+        transform: translateY(-1px);
+      }
     }
 
     h2 {
@@ -54,5 +68,12 @@
     border-radius: 9999px;
     font-size: 0.75rem;
     font-weight: 500;
+  }
+
+  &__cta {
+    display: inline-block;
+    color: #0f766e;
+    font-size: 0.875rem;
+    font-weight: 600;
   }
 }
