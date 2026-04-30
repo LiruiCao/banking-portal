@@ -1,9 +1,12 @@
 import { initFederation } from '@angular-architects/native-federation';
+import { environment } from './environments/environment';
 
-// V1: inline manifest. Revisit when we add more remotes (Accounts, Wealth)
-// and want to swap URLs per environment without rebuilding the shell.
+// Federation manifest is inlined and pulled from the environment so that
+// dev points at localhost and production swaps in the deployed Payments URL.
+// Revisit when we add more remotes (Accounts, Wealth) — at that point a JSON
+// manifest fetched at runtime will be cleaner.
 initFederation({
-  payments: 'http://localhost:4201/remoteEntry.json',
+  payments: environment.paymentsRemoteUrl,
 })
   .catch((err) => console.error('[shell] federation init failed', err))
   .then(() => import('./bootstrap'))
