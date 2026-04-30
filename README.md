@@ -42,8 +42,7 @@ end
     style Payments fill:#ecfdf5,stroke:#0f766e
     style Store fill:#f1f5f9,stroke:#64748b
     style Effects fill:#f1f5f9,stroke:#64748b
-
-​```
+```
 
 **Key architectural choices**:
 
@@ -75,7 +74,7 @@ npm run start:payments
 # Terminal 2 — start Shell
 
 npm run start:shell
-​```
+```
 
 - Shell: http://localhost:4200
 - Payments standalone: http://localhost:4201
@@ -116,18 +115,18 @@ banking-portal/
 
 ### Why a "draft vs request" type split
 
-​```typescript
+```typescript
 interface ETransferDraft {
-recipientId: string | null;
-amountCents: number | null;
-// ... all fields nullable — wizard in progress
+  recipientId: string | null;
+  amountCents: number | null;
+  // ... all fields nullable — wizard in progress
 }
 
 interface ETransferRequest {
-recipient: Recipient; // resolved, non-null
-fromAccount: Account;
-amountCents: number;
-// ... all required — ready to submit
+  recipient: Recipient; // resolved, non-null
+  fromAccount: Account;
+  amountCents: number;
+  // ... all required — ready to submit
 }
 ```
 
