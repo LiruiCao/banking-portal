@@ -1,6 +1,6 @@
 <app-flow-shell
   currentStep="review"
-  title="Review & Confirm"
+  title="Review and Confirm"
   [canContinue]="canContinue()"
   [continueLabel]="continueLabel()"
   (continueClick)="onContinue()"
@@ -21,7 +21,7 @@
       <div class="review__label">Amount</div>
       <div class="review__amount">
         ${{ amountCents() / 100 | number: "1.2-2" }}
-        <span class="review__currency">CAD</span>
+        <span class="review__currency"></span>
       </div>
     </div>
 

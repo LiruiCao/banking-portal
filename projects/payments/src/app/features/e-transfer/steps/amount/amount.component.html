@@ -1,6 +1,6 @@
 <app-flow-shell
   currentStep="amount"
-  title="Amount and account"
+  title=""
   [canContinue]="canContinue()"
   (continueClick)="onContinue()"
   (backClick)="onBack()"
@@ -8,12 +8,12 @@
   <form [formGroup]="form" class="amount-form">
     @if (recipient(); as r) {
       <div class="amount-form__recipient" aria-label="Sending to">
-        Sending to <strong>{{ r.name }}</strong>
+        To &nbsp; <strong>{{ r.name }}</strong>
       </div>
     }
 
     <div class="amount-form__field">
-      <label for="amount" class="amount-form__label">Amount (CAD)</label>
+      <label for="amount" class="amount-form__label">Amount</label>
       <div class="amount-form__amount-wrap">
         <span class="amount-form__currency-symbol" aria-hidden="true">$</span>
         <input
@@ -21,7 +21,6 @@
           type="text"
           inputmode="decimal"
           formControlName="amount"
-          placeholder="0.00"
           class="amount-form__input amount-form__input--amount"
           autocomplete="off"
         />
@@ -43,7 +42,7 @@
     </div>
 
     <div class="amount-form__field">
-      <label for="fromAccount" class="amount-form__label">From account</label>
+      <label for="fromAccount" class="amount-form__label">From</label>
       <select
         id="fromAccount"
         formControlName="fromAccountId"
@@ -68,7 +67,6 @@
         formControlName="memo"
         rows="2"
         maxlength="400"
-        placeholder="What's it for?"
         class="amount-form__input amount-form__input--textarea"
       ></textarea>
     </div>

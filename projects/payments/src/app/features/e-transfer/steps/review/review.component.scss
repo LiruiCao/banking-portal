@@ -10,34 +10,42 @@
   &__row {
     display: grid;
     grid-template-columns: 100px 1fr;
-    gap: 1rem;
-    padding: 0.875rem 1rem;
-    background: #f8fafc;
-    border-radius: 6px;
+    gap: 1.5rem;
+    padding: 1.25rem 1.25rem;
+    min-height: 44px;
+    background: #ffffff;
+    border-radius: 10px;
+    align-items: start;
   }
 
   &__label {
-    color: #64748b;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     font-weight: 500;
+    line-height: 1.4;
+    text-transform: uppercase; // 大写,银行 UI 常见
+    padding-top: 0.125rem;
   }
 
   &__value {
+    strong {
+      line-height: 1.4;
+    }
+  }
+
+  &__amount {
+    // ← 对!跟 &__value 同层级
     color: #0f172a;
-    font-size: 0.9375rem;
+    font-size: 2rem;
+    font-weight: 300;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    letter-spacing: -0.02em;
   }
 
   &__sub {
     color: #64748b;
     font-size: 0.8125rem;
     margin-top: 0.25rem;
-  }
-
-  &__amount {
-    color: #0f172a;
-    font-size: 1.5rem;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
   }
 
   &__currency {

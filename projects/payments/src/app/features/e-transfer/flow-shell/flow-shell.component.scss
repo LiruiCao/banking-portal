@@ -24,7 +24,9 @@
     border-radius: 9999px;
     font-size: 0.875rem;
     color: #94a3b8;
-    transition: color 0.15s ease, background 0.15s ease;
+    transition:
+      color 0.15s ease,
+      background 0.15s ease;
 
     // 进度条的细节
     &:not(:last-child)::after {
@@ -98,13 +100,26 @@
   }
 
   &__btn {
+    min-width: 140px; // ← 新增,两个按钮都至少 140px
+    height: 44px; // ← 改:从 40px 提到 44px,跟 input 一致
+    padding: 0 1.5rem; // ← 改:稍微宽一点,视觉更舒服
+    border-radius: 6px;
+    font-size: 0.9375rem; // ← 改:从 14px 提到 15px,跟 form 控件字号一致
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background 0.15s ease,
+      opacity 0.15s ease;
+    border: 1px solid transparent;
     height: 40px;
     padding: 0 1.25rem;
     border-radius: 6px;
     font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.15s ease, opacity 0.15s ease;
+    transition:
+      background 0.15s ease,
+      opacity 0.15s ease;
     border: 1px solid transparent;
 
     &:disabled {
