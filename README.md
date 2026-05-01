@@ -10,8 +10,6 @@ A micro-frontend banking portal built with Angular 18 and Native Federation, mod
 
 ---
 
-```
-
 ## Why this project
 
 Large financial platforms face a recurring frontend challenge: dozens of teams, sprawling Angular monoliths, and release cycles that block each other. Micro-frontends are how the industry is responding. This project is a deliberate, enterprise-grade MFE reference that shows:
@@ -20,7 +18,6 @@ Large financial platforms face a recurring frontend challenge: dozens of teams, 
 - **Runtime composition** — the user sees one app; underneath, two run-time-loaded Angular apps cooperate
 - ** state management** — NgRx Store with `exhaustMap`-based effect prevents duplicate submissions on double-click
 - **Auditability** — every state change is an action; the action log is the audit log
-
 
 ## Architecture
 
