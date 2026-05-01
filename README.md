@@ -4,20 +4,23 @@ A micro-frontend banking portal built with Angular 18 and Native Federation, mod
 
 > **V1**: Shell + Payments MFE with a complete Interac e-Transfer journey (recipient → amount → review → confirmation), end-to-end through NgRx Store + Effects.
 
-[![Angular 18](https://img.shields.io/badge/Angular-18-DD0031)](https://angular.dev) [![Native Federation](https://img.shields.io/badge/Native_Federation-18-0F766E)](https://www.npmjs.com/package/@angular-architects/native-federation) [![NgRx Store](https://img.shields.io/badge/NgRx-Store_+_Effects-9333EA)](https://ngrx.io)
+**Live demo (integrated):** https://banking-portal-shell-git-main-liruicaos-projects.vercel.app/
+
+**Standalone Payments remote:** https://banking-portal-payments-git-main-liruicaos-projects.vercel.app/
 
 ---
 
+````
+
 ## Why this project
 
-Large financial platforms face a recurring frontend challenge: dozens of teams, sprawling Angular monoliths, and release cycles that block each other. Micro-frontends are how the industry is responding — but most public examples are toy demos. This project is a deliberate, banking-flavoured MFE reference that shows:
+Large financial platforms face a recurring frontend challenge: dozens of teams, sprawling Angular monoliths, and release cycles that block each other. Micro-frontends are how the industry is responding. This project is a deliberate, enterprise-grade MFE reference that shows:
 
 - **Independent build artifacts** — Shell and Payments build and deploy separately
 - **Runtime composition** — the user sees one app; underneath, two run-time-loaded Angular apps cooperate
-- **Banking-grade state management** — NgRx Store with `exhaustMap`-based effect prevents duplicate submissions on double-click
+- ** state management** — NgRx Store with `exhaustMap`-based effect prevents duplicate submissions on double-click
 - **Auditability** — every state change is an action; the action log is the audit log
 
-The domain is retail banking — Interac e-Transfer specifically — drawn from 4 years of frontend work on frontend engineering at .
 
 ## Architecture
 
@@ -42,7 +45,7 @@ end
     style Payments fill:#ecfdf5,stroke:#0f766e
     style Store fill:#f1f5f9,stroke:#64748b
     style Effects fill:#f1f5f9,stroke:#64748b
-```
+````
 
 **Key architectural choices**:
 
@@ -57,7 +60,7 @@ end
 - **Native Federation** (`@angular-architects/native-federation@18`) for runtime MFE composition
 - **NgRx Store + Effects + DevTools** for state management and async orchestration
 - **Reactive Forms** with custom validators for amount limits and decimal patterns
-- **TypeScript strict mode**, OnPush change detection across the board
+- **OnPush change detection**, across the board
 - **SCSS** with BEM, no UI library (intentional — keeping bundle lean for MFE; design system is V2)
 
 ## Local development
@@ -109,9 +112,40 @@ banking-portal/
 
 ## Architectural decisions worth highlighting
 
+### Route-scoped NgRx providers for MFE compatibility
+
+```typescript
+export const PAYMENTS_ROUTES: Routes = [
+  {
+    path: "e-transfer",
+    providers: [provideState(ETRANSFER_FEATURE_KEY, eTransferReducer), provideEffects([ETransferEffects])],
+    loadChildren: () => import("./features/e-transfer/e-transfer.routes").then((m) => m.E_TRANSFER_ROUTES),
+  },
+];
+```
+
+When a remote MFE loads, the host runs `bootstrapApplication`, not the remote's. Putting `provideStore` in the remote's `app.config.ts` means the registration code never executes when integrated. Route-scoped providers ensure feature state is registered when the route activates, regardless of who hosts the remote.
+
 ### Why `exhaustMap`, not `switchMap`, in the submit effect
 
-`switchMap` cancels the previous in-flight request when a new one starts. For money movement that is dangerous — the cancelled request may already have been processed by the backend. `exhaustMap` ignores new triggers while a submission is in flight, so duplicate clicks are dropped. Combined with the UI disabling the button on `submitting` state, this gives idempotent-by-construction submission.
+`switchMap` would cancel an in-flight request when a new one arrives — but the backend may have already debited the account, creating a duplicate-charge risk. `exhaustMap` drops new triggers while one is in flight, making submission **idempotent by construction**.
+
+```typescript
+readonly submit$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(ETransferActions.submitRequested),
+    exhaustMap(([, draft, recipient, account]) => /* ... */),
+  ),
+);
+```
+
+### State machines via discriminated unions, not boolean flags
+
+```typescript
+export type ETransferStatus = "idle" | "submitting" | "submitted" | "failed";
+```
+
+Boolean flags like `isLoading`, `isSuccess`, `isError` allow invalid combinations (`isLoading: true, isSuccess: true`). A union type makes invalid states unrepresentable at the type level — critical for state-related bugs.
 
 ### Why a "draft vs request" type split
 
@@ -132,18 +166,51 @@ interface ETransferRequest {
 
 The type system enforces "only completed drafts can be submitted." It is impossible to dispatch a submit with half-filled state because the type does not compile.
 
-### Why route-per-step, not in-component step state
+### Amounts in cents, not dollars
 
-Browser back button, URL deep-linking, and per-step lazy loading all become free. The cost is that step components must read state from the store rather than passing through props — but that is NgRx's job and it is already there.
+```typescript
+amountCents: number; // not amountDollars: number
+```
+
+Floating-point arithmetic on monetary values is produces precision errors (`0.1 + 0.2 === 0.30000000000000004`). Storing as cents (integers) and converting at the UI boundary is the standard pattern.
+
+### Draft and Request as separate types
+
+```typescript
+type ETransferDraft = {
+  /* fields can be null while user is filling */
+};
+type ETransferRequest = {
+  /* all fields required, validated */
+};
+```
+
+Type-level enforcement of "only complete drafts can be submitted." The compiler refuses to pass an incomplete draft to the submit effect, eliminating an entire class of bugs at design time.
+
+### Native Federation, not Module Federation
+
+This project runs on Angular 18, which defaults to the esbuild builder. Module Federation is Webpack-bound, so on esbuild it's not an option without rolling back to the legacy builder — which would forfeit the build-speed gains that motivate the upgrade in the first place. Native Federation (`@angular-architects/native-federation`) delivers the same MFE semantics on top of Web-standard import maps, and is officially recommended by the Angular Architects team for esbuild-based projects.
+
+Module Federation remains a solid choice for codebases on Angular 14–16 with established Webpack infrastructure.The two share the same core API surface (`loadRemoteModule`) and identical MFE design principles (location independence, route-scoped state, no host assumptions); the difference is purely in the build-time mechanism.
+
+### Relative routing for location independence
+
+```typescript
+this.router.navigate(["../amount"], { relativeTo: this.route });
+```
+
+A remote MFE cannot assume which path the host mounts it under. Absolute paths like `'/e-transfer/amount'` work standalone but break when integrated. Relative navigation makes the remote work under any mount point — `/payments`, `/banking`, or anywhere else.
+
+---
 
 ### Why no Material UI (yet)
 
-In MFE architectures, sharing UI libraries across remotes is a non-trivial decision (one shared bundle vs. per-MFE bundle, version drift risk). V1 keeps the dependency surface small. V2's plan is to extract a shared design system as its own federated remote.
+In MFE architectures, sharing UI libraries across remotes is a non-trivial decision (one shared bundle vs. per-MFE bundle, version drift risk). V1 keeps the dependency surface small. Adding a shared design system is a deliberate next step once a second remote is added.
 
 ## Roadmap
 
 - [x] **V1** — Shell + Payments MFE; complete e-Transfer flow; NgRx Store + Effects
-- [ ] **V1.1** — Bill Payments (utilities, CRA, credit cards)
+- [ ] **V1.1** — Bill Payments (utilities, credit cards)
 - [ ] **V1.2** — Transaction history with filtering
 - [ ] **V1.3** — Jest unit tests + Playwright E2E for the e-Transfer happy path
 - [ ] **V2** — Accounts MFE (account summary, transactions); cross-MFE event bus
@@ -163,4 +230,4 @@ This is a portfolio demo. Real banking deployment would also need:
 
 ## Author
 
-Built by Lirui Cao. 4 years of frontend engineering on frontend engineering at ; this project demonstrates modern Angular MFE architecture.
+Built by Lirui Cao. Several years of frontend engineering experience; this project demonstrates modern Angular MFE architecture.
