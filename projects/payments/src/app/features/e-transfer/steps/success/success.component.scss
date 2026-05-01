@@ -3,7 +3,7 @@
 }
 
 .success {
-  max-width: 720px;
+  max-width: 500px;
   margin: 0 auto;
   padding: 1rem 0;
 
@@ -16,18 +16,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 64px;
-    height: 64px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     background: #ecfdf5;
     color: #0f766e;
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 600;
     margin: 0 auto 1.25rem;
   }
 
   &__title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
     color: #0f172a;
     margin: 0 0 0.75rem;
@@ -38,7 +38,7 @@
     // Larger than Review's amount (32px) — Success is the
     // celebratory peak of the flow, so the number takes
     // visual prominence.
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
     color: #0f172a;
     margin: 0 0 1.2rem;
@@ -60,7 +60,7 @@
 
   &__sub {
     color: #475569;
-    margin: 0 0 3.5rem;
+    margin: 0 0 2.5rem;
     font-size: 0.9375rem;
     text-align: center;
   }
@@ -81,8 +81,8 @@
   &__row {
     display: grid;
     grid-template-columns: 140px 1fr;
-    padding: 1.25rem 1.5rem;
-    min-height: 72px;
+    padding: 1rem 1.25rem;
+    min-height: 64px;
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
