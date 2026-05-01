@@ -16,7 +16,7 @@ Large financial platforms face a recurring frontend challenge: dozens of teams, 
 
 - **Independent build artifacts** — Shell and Payments build and deploy separately
 - **Runtime composition** — the user sees one app; underneath, two run-time-loaded Angular apps cooperate
-- ** state management** — NgRx Store with `exhaustMap`-based effect prevents duplicate submissions on double-click
+- **state management** — NgRx Store with `exhaustMap`-based effect prevents duplicate submissions on double-click
 - **Auditability** — every state change is an action; the action log is the audit log
 
 ## Architecture
@@ -46,7 +46,7 @@ end
 
 **Key architectural choices**:
 
-- **Native Federation over Module Federation** — aligned with Angular 17+'s esbuild builder; Module Federation is Webpack-locked
+- **Native Federation over Module Federation** — required by Angular 17+'s esbuild builder, which is incompatible with Webpack-bound Module Federation
 - **NgRx Store + Effects over Signal Store** — financial submissions need an explicit action log for replayable action log; `exhaustMap` in the submit effect prevents duplicate transfers on double-click
 - **Separate URL per step** — browser back button works naturally; deep-linking is possible; each step is independently lazy-loaded
 - **Money in cents** — all monetary state stored as integers; floating-point arithmetic is produces precision errors
