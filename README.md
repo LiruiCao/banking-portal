@@ -10,7 +10,7 @@ A micro-frontend banking portal built with Angular 18 and Native Federation, mod
 
 ---
 
-````
+```
 
 ## Why this project
 
@@ -45,7 +45,7 @@ end
     style Payments fill:#ecfdf5,stroke:#0f766e
     style Store fill:#f1f5f9,stroke:#64748b
     style Effects fill:#f1f5f9,stroke:#64748b
-````
+```
 
 **Key architectural choices**:
 
