@@ -1,6 +1,6 @@
 # Banking Portal
 
-A micro-frontend banking portal built with Angular 18 and Native Federation, modeling retail banking flows.
+A micro-frontend banking portal built with Angular 18 and Native Federation.
 
 > **V1**: Shell + Payments MFE with a complete Interac e-Transfer journey (recipient → amount → review → confirmation), end-to-end through NgRx Store + Effects.
 
@@ -203,28 +203,3 @@ A remote MFE cannot assume which path the host mounts it under. Absolute paths l
 ### Why no Material UI (yet)
 
 In MFE architectures, sharing UI libraries across remotes is a non-trivial decision (one shared bundle vs. per-MFE bundle, version drift risk). V1 keeps the dependency surface small. Adding a shared design system is a deliberate next step once a second remote is added.
-
-## Roadmap
-
-- [x] **V1** — Shell + Payments MFE; complete e-Transfer flow; NgRx Store + Effects
-- [ ] **V1.1** — Bill Payments (utilities, credit cards)
-- [ ] **V1.2** — Transaction history with filtering
-- [ ] **V1.3** — Jest unit tests + Playwright E2E for the e-Transfer happy path
-- [ ] **V2** — Accounts MFE (account summary, transactions); cross-MFE event bus
-- [ ] **V2** — Migrate to Nx workspace as MFE count grows
-- [ ] **V3** — Wealth MFE (portfolio, fixed-income); evolving from a separate project
-- [ ] **V3** — Shared design system as a federated UI remote
-
-## Production considerations not in V1
-
-This is a portfolio demo. Real banking deployment would also need:
-
-- **Data residency** — Canadian banks (OSFI-regulated) require data in Canada; AWS Canada Central or Azure Canada Central rather than US-hosted platforms like Vercel
-- **Authentication** — currently the user context is hard-coded; production needs SSO + token refresh + per-route guards
-- **Idempotency keys** — the submit effect prevents same-tab double-submit, but cross-session retries need a server-issued idempotency key on the request
-- **CSP, SRI, audit logging** — enterprise CDN-level enforcement
-- **Real backend** — currently mocked; the effect is shaped so swapping the mocked observable for `http.post('/api/e-transfers', request)` is a one-line change
-
-## Author
-
-Built by Lirui Cao.
