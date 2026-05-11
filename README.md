@@ -227,4 +227,4 @@ This is a portfolio demo. Real banking deployment would also need:
 
 ## Author
 
-Built by Lirui Cao. Several years of frontend engineering experience; this project demonstrates modern Angular MFE architecture.
+Built by Lirui Cao.
