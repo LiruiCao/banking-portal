@@ -6,7 +6,7 @@ A micro-frontend banking portal built with Angular 18 and Native Federation.
 
 **Live demo (integrated):** https://banking-portal-shell-git-main-liruicaos-projects.vercel.app/
 
-**Standalone Payments remote:** https://banking-portal-payments-git-main-liruicaos-projects.vercel.app/
+**Payments:** https://banking-portal-payments-git-main-liruicaos-projects.vercel.app/
 
 ---
 
