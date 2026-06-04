@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 
 import {
   TransactionsActions,
@@ -18,7 +18,7 @@ import {
 @Component({
   selector: 'app-transactions-list',
   standalone: true,
-  imports: [CurrencyPipe, DatePipe],
+  imports: [DatePipe, DecimalPipe],
   templateUrl: './transactions-list.component.html',
   styleUrl: './transactions-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

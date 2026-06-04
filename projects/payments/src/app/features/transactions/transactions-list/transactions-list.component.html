@@ -20,7 +20,8 @@
           <td>{{ t.date | date: "mediumDate" }}</td>
           <td>{{ t.recipientName }}</td>
           <td class="transactions__amount">
-            {{ t.amountCents / 100 | currency: t.currency }}
+            ${{ t.amountCents / 100 | number: "1.2-2" }}
+            <span class="transactions__currency">{{ t.currency }}</span>
           </td>
           <td>
             <span

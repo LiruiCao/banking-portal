@@ -1,5 +1,11 @@
 :host {
   display: block;
+  // Top padding visually centres the title against the sidebar's first item
+  // ("Accounts"). Accounts sits 1.5rem below the body top (sidebar 1rem +
+  // nav-item 0.5rem); the title's font is larger, so it's pulled up ~0.25rem
+  // from that so their text centres/baselines line up rather than their tops.
+  // Horizontal padding is symmetric (equal left/right gutters), roomier left.
+  padding: 1.25rem 3rem;
 }
 
 .transactions {
@@ -8,6 +14,7 @@
     font-weight: 600;
     color: #0f172a;
     margin: 0 0 1rem;
+    // Left edge sits flush with the table's border line (no cell-padding indent).
   }
 
   &__error {
@@ -35,6 +42,12 @@
       padding: 0.75rem 1rem;
     }
 
+    // The status pills carry 0.625rem of inner padding, so shift the "Status"
+    // header right by that much to sit above the pill *labels*, not the edge.
+    th:last-child {
+      padding-left: calc(1rem + 0.625rem);
+    }
+
     thead th {
       background: #f8fafc;
       color: #64748b;
@@ -56,6 +69,16 @@
     font-variant-numeric: tabular-nums;
     color: #0f172a;
     font-weight: 600;
+  }
+
+  // Currency code trailing the amount — muted grey, matching the e-transfer
+  // success screen's `success__currency`.
+  &__currency {
+    margin-left: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #64748b;
+    letter-spacing: 0.03em;
   }
 
   &__status {
