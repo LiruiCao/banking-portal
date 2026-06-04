@@ -1,0 +1,49 @@
+<section class="transactions">
+  <h1 class="transactions__title">Transaction History</h1>
+
+  @if (error(); as err) {
+    <p class="transactions__error" role="alert">{{ err }}</p>
+  }
+
+  <table class="transactions__table">
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Recipient</th>
+        <th scope="col" class="transactions__amount-col">Amount</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (t of transactions(); track t.id) {
+        <tr class="transactions__row">
+          <td>{{ t.date | date: "mediumDate" }}</td>
+          <td>{{ t.recipientName }}</td>
+          <td class="transactions__amount">
+            {{ t.amountCents / 100 | currency: t.currency }}
+          </td>
+          <td>
+            <span
+              class="transactions__status"
+              [class.transactions__status--completed]="t.status === 'completed'"
+              [class.transactions__status--pending]="t.status === 'pending'"
+              [class.transactions__status--failed]="t.status === 'failed'"
+            >
+              {{ t.status }}
+            </span>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4" class="transactions__empty">
+            @if (isLoading()) {
+              Loading transactions…
+            } @else {
+              No transactions yet.
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>
