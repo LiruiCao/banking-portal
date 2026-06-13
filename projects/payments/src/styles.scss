@@ -21,3 +21,9 @@ body {
 * {
   box-sizing: border-box;
 }
+
+/* Responsive breakpoints — single source of truth for the scheme.
+   Applied as inline @media queries across component styles:
+     Tablet:  @media (max-width: 1024px)
+     Mobile:  @media (max-width: 640px)
+   Desktop is the default (unqualified) layout. */

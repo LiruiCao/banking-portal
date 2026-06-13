@@ -82,3 +82,28 @@
     flex-shrink: 0;
   }
 }
+
+/* ---------- Responsive ---------- */
+// Mobile: compress the rows so the whole list + the sticky footer fit one
+// screen without scrolling.
+@media (max-width: 640px) {
+  .recipient-list__item {
+    padding: 0.625rem 0.875rem;
+    gap: 0.75rem;
+  }
+  .recipient-list__avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 0.8125rem;
+  }
+  // Keep the name on one line so badge'd rows (Auto-deposit) don't grow taller.
+  .recipient-list__name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .recipient-list__badge {
+    font-size: 0.6875rem;
+    padding: 0.1875rem 0.5rem;
+  }
+}

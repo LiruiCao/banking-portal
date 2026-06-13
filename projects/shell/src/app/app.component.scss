@@ -121,6 +121,47 @@
   }
 }
 
+/* ---------- Responsive ---------- */
+// Tablet: narrow the sidebar so the content keeps usable width.
+@media (max-width: 1024px) {
+  .app-shell__sidebar {
+    width: 180px;
+  }
+  .app-shell__topbar {
+    padding: 0 1rem;
+  }
+}
+
+// Mobile: the sidebar becomes a horizontal nav strip beneath the topbar.
+@media (max-width: 640px) {
+  .app-shell__body {
+    flex-direction: column;
+  }
+  .app-shell__sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0.5rem;
+    overflow-x: hidden;
+  }
+  // All four items share the row edge-to-edge — no overflow, no scrolling.
+  .app-shell__nav {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.25rem;
+  }
+  .app-shell__nav-item {
+    flex: 0 1 auto;
+    padding: 0.375rem 0.5rem;
+    font-size: 0.8125rem;
+    white-space: nowrap;
+  }
+  // Hide the "Soon" pills so all four labels fit.
+  .app-shell__nav-badge {
+    display: none;
+  }
+}
+
 // 整体布局:topbar 固定 56px 高 + sidebar 左侧 220px + main 内容
 // 品牌色选了深绿 #0f766e(teal-700)—— 不用 BMO 的蓝(避嫌)也不用  的蓝(前东家),独立色系显得这是个独立品牌
 // sidebar 的 Payments 高亮用浅绿 #ecfdf5,和品牌色呼应

@@ -105,3 +105,11 @@
     margin-top: 0.125rem;
   }
 }
+
+/* ---------- Responsive ---------- */
+// Inputs are already fluid (width:100%); just tighten vertical rhythm on phones.
+@media (max-width: 640px) {
+  .amount-form {
+    gap: 1rem;
+  }
+}

@@ -77,3 +77,42 @@
     font-weight: 600;
   }
 }
+
+/* ---------- Responsive ---------- */
+// Tablet: the auto-fit grid already drops to 2 columns; just tighten padding.
+@media (max-width: 1024px) {
+  :host {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  :host {
+    padding: 1.25rem 1rem;
+  }
+
+  // Compress so all three cards fit one screen without scrolling.
+  .payments-home__header {
+    margin-bottom: 1rem;
+  }
+  .payments-home__subtitle {
+    font-size: 0.9375rem;
+  }
+
+  .payments-home__grid {
+    grid-template-columns: 1fr; // one card per row on phones
+    gap: 0.75rem;
+  }
+
+  .payments-home__card {
+    padding: 1rem 1.25rem;
+
+    h2 {
+      margin-bottom: 0.25rem;
+    }
+
+    p {
+      margin-bottom: 0.625rem;
+    }
+  }
+}
