@@ -113,3 +113,80 @@
     padding: 2rem 1rem;
   }
 }
+
+/* ---------- Responsive ---------- */
+// Tablet: pull in the generous desktop gutters.
+@media (max-width: 1024px) {
+  :host {
+    padding: 1.25rem 1.5rem;
+  }
+}
+
+// Mobile: the table reflows into stacked cards (no horizontal scroll).
+// Cell order is Date / Recipient / Amount / Status; flex `order` rearranges
+// each row into: recipient + status on top, then date, then amount.
+@media (max-width: 640px) {
+  :host {
+    padding: 1.25rem 1rem;
+  }
+
+  .transactions__table {
+    border: none;
+    background: transparent;
+  }
+
+  // Column headers are redundant once each row is a self-describing card.
+  .transactions__table thead {
+    display: none;
+  }
+
+  .transactions__table tbody tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.75rem;
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+  }
+
+  .transactions__table tbody tr + tr {
+    border-top: 1px solid #e2e8f0; // each card carries its own full border
+    margin-top: 0.75rem;
+  }
+
+  .transactions__table td {
+    padding: 0;
+    border: none;
+  }
+
+  .transactions__table td:nth-child(2) {
+    // Recipient — top-left, emphasised
+    order: 1;
+    flex: 1;
+    font-weight: 600;
+    color: #0f172a;
+  }
+  .transactions__table td:nth-child(4) {
+    // Status pill — top-right
+    order: 2;
+  }
+  .transactions__table td:nth-child(1) {
+    // Date — second line
+    order: 3;
+    flex-basis: 100%;
+    color: #64748b;
+    font-size: 0.8125rem;
+  }
+  .transactions__table td:nth-child(3) {
+    // Amount — third line, left-aligned (overrides the right-aligned column)
+    order: 4;
+    flex-basis: 100%;
+    text-align: left;
+  }
+
+  .transactions__empty {
+    padding: 1.5rem 1rem;
+  }
+}

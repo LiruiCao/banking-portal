@@ -69,3 +69,15 @@
     margin-top: 0.5rem;
   }
 }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .review__row {
+    grid-template-columns: 90px 1fr;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  .review__amount {
+    font-size: 1.75rem;
+  }
+}

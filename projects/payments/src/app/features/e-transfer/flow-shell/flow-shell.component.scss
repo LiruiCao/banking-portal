@@ -148,3 +148,69 @@
     }
   }
 }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .flow-shell {
+    padding: 2rem 1.25rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .flow-shell {
+    padding: 1rem;
+  }
+
+  // Collapse the progress bar to numbered markers; labels would overflow.
+  .flow-shell__step-label {
+    display: none;
+  }
+  // Evenly distribute the markers across the full width so the stepper stays
+  // balanced whether it has 4 steps or 3 (auto-deposit recipients skip the
+  // Security step). space-evenly keeps equal gaps including the ends, so it
+  // reads as centred for any count.
+  .flow-shell__progress {
+    justify-content: space-evenly;
+    gap: 0;
+    margin-bottom: 1rem; // tighten the big gap before the title
+    padding-bottom: 1rem;
+  }
+  .flow-shell__step {
+    padding: 0.25rem 0.5rem;
+  }
+  // Slightly larger markers so the wider stepper stays legible.
+  .flow-shell__step-marker {
+    width: 26px;
+    height: 26px;
+  }
+  // Drop the per-step connector dashes — once the markers are spread out the
+  // dash just hangs into empty space and looks broken.
+  .flow-shell__step:not(:last-child)::after {
+    display: none;
+  }
+
+  .flow-shell__title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .flow-shell__content {
+    margin-bottom: 1rem;
+  }
+
+  // Pin the actions to the bottom of the viewport so the primary button stays
+  // reachable when the step content (e.g. a long recipient list) scrolls.
+  .flow-shell__actions {
+    position: sticky;
+    bottom: 0;
+    margin: 1rem -1rem 0;
+    padding: 1rem;
+    background: #f8fafc;
+  }
+
+  // Buttons share the row evenly instead of a fixed 140px each.
+  .flow-shell__btn {
+    min-width: 0;
+    flex: 1;
+  }
+}
