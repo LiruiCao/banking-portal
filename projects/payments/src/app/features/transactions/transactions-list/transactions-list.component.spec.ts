@@ -57,7 +57,7 @@ describe('TransactionsListComponent', () => {
   });
 
   it('should dispatch loadRequested on init when status is idle', () => {
-    const dispatchSpy = spyOn(store, 'dispatch');
+    const dispatchSpy = jest.spyOn(store, 'dispatch');
     TestBed.createComponent(TransactionsListComponent);
     expect(dispatchSpy).toHaveBeenCalledWith(
       TransactionsActions.loadRequested(),
@@ -68,7 +68,7 @@ describe('TransactionsListComponent', () => {
     store.overrideSelector(selectStatus, 'loaded');
     store.refreshState();
 
-    const dispatchSpy = spyOn(store, 'dispatch');
+    const dispatchSpy = jest.spyOn(store, 'dispatch');
     TestBed.createComponent(TransactionsListComponent);
     expect(dispatchSpy).not.toHaveBeenCalled();
   });
