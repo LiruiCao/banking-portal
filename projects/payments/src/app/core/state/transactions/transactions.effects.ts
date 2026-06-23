@@ -1,24 +1,41 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
-import { catchError, delay, map, switchMap } from 'rxjs/operators';
+import {
+  catchError,
+  filter,
+  map,
+  switchMap,
+  withLatestFrom,
+} from 'rxjs/operators';
 
 import { TransactionsActions } from './transactions.actions';
+import { selectStatus } from './transactions.selectors';
 import { ETransferActions } from '../e-transfer';
+import { TransactionApiService } from '../../services';
 import { ETransferReceipt, Transaction } from '../../models';
 
 @Injectable()
 export class TransactionsEffects {
   private readonly actions$ = inject(Actions);
+  private readonly store = inject(Store);
+  private readonly api = inject(TransactionApiService);
 
   readonly load$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TransactionsActions.loadRequested),
+      // Idle guard, sunk down from the component: only the first entry actually
+      // hits the network. The slice persists across features, so re-opening the
+      // list while already 'loaded'/'loading' is a no-op — otherwise the mock
+      // reload would clobber e-transfers recorded since. Callers just fire
+      // load() unconditionally; the rule lives here.
+      withLatestFrom(this.store.select(selectStatus)),
+      filter(([, status]) => status === 'idle'),
       // switchMap: cancel previous on re-load
       // (vs exhaustMap which is for submits)
       switchMap(() =>
-        of(MOCK_TRANSACTIONS).pipe(
-          delay(600), // simulate network latency
+        this.api.load().pipe(
           map((transactions) =>
             TransactionsActions.loadSucceeded({ transactions }),
           ),
@@ -64,51 +81,3 @@ function receiptToTransaction(receipt: ETransferReceipt): Transaction {
     status: receipt.request.recipient.autoDeposit ? 'completed' : 'pending',
   };
 }
-
-/**
- * Hardcoded mock history. Lives in the effect (not the reducer's initial state)
- * so the component goes through the real idle → loading → loaded lifecycle.
- * amountCents uses numeric separators so the dollar value is readable at a glance.
- */
-const MOCK_TRANSACTIONS: readonly Transaction[] = [
-  {
-    id: 'txn_01',
-    date: '2026-05-28T14:22:00Z',
-    recipientName: 'Emily Chen',
-    amountCents: 125_00, // $125.00
-    currency: 'CAD',
-    status: 'completed',
-  },
-  {
-    id: 'txn_02',
-    date: '2026-05-24T09:10:00Z',
-    recipientName: 'Marcus Rivera',
-    amountCents: 1_450_00, // $1,450.00
-    currency: 'CAD',
-    status: 'completed',
-  },
-  {
-    id: 'txn_03',
-    date: '2026-05-21T18:45:00Z',
-    recipientName: 'Priya Sharma',
-    amountCents: 75_50, // $75.50
-    currency: 'CAD',
-    status: 'pending',
-  },
-  {
-    id: 'txn_04',
-    date: '2026-05-17T11:03:00Z',
-    recipientName: 'David Tremblay',
-    amountCents: 3_000_00, // $3,000.00 — at the per-transfer limit
-    currency: 'CAD',
-    status: 'completed',
-  },
-  {
-    id: 'txn_05',
-    date: '2026-05-12T16:30:00Z',
-    recipientName: 'Marcus Rivera',
-    amountCents: 220_00, // $220.00
-    currency: 'CAD',
-    status: 'failed',
-  },
-];

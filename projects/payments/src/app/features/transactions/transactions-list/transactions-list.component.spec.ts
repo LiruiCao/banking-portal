@@ -1,14 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { BehaviorSubject, of } from 'rxjs';
 
 import { TransactionsListComponent } from './transactions-list.component';
-import {
-  TransactionsActions,
-  selectError,
-  selectIsLoading,
-  selectStatus,
-  selectTransactions,
-} from '../../../core/state/transactions';
+import { TransactionFacade } from '../../../core/state/transactions';
 import { Transaction } from '../../../core/models';
 
 const SAMPLE_TRANSACTIONS: readonly Transaction[] = [
@@ -31,24 +25,29 @@ const SAMPLE_TRANSACTIONS: readonly Transaction[] = [
 ];
 
 describe('TransactionsListComponent', () => {
-  let store: MockStore;
+  // The component talks only to the facade — no Store, actions, or selectors in
+  // sight — so the test stubs the facade and never wires up NgRx at all.
+  let transactions$: BehaviorSubject<readonly Transaction[]>;
+  let facade: {
+    transactions$: BehaviorSubject<readonly Transaction[]>;
+    isLoading$: ReturnType<typeof of<boolean>>;
+    error$: ReturnType<typeof of<string | null>>;
+    load: jest.Mock;
+  };
 
   beforeEach(async () => {
+    transactions$ = new BehaviorSubject<readonly Transaction[]>(SAMPLE_TRANSACTIONS);
+    facade = {
+      transactions$,
+      isLoading$: of(false),
+      error$: of(null),
+      load: jest.fn(),
+    };
+
     await TestBed.configureTestingModule({
       imports: [TransactionsListComponent],
-      providers: [
-        provideMockStore({
-          selectors: [
-            { selector: selectTransactions, value: SAMPLE_TRANSACTIONS },
-            { selector: selectIsLoading, value: false },
-            { selector: selectError, value: null },
-            { selector: selectStatus, value: 'idle' },
-          ],
-        }),
-      ],
+      providers: [{ provide: TransactionFacade, useValue: facade }],
     }).compileComponents();
-
-    store = TestBed.inject(MockStore);
   });
 
   it('should create', () => {
@@ -56,21 +55,9 @@ describe('TransactionsListComponent', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should dispatch loadRequested on init when status is idle', () => {
-    const dispatchSpy = jest.spyOn(store, 'dispatch');
+  it('should ask the facade to load on init (the idle guard lives in the effect)', () => {
     TestBed.createComponent(TransactionsListComponent);
-    expect(dispatchSpy).toHaveBeenCalledWith(
-      TransactionsActions.loadRequested(),
-    );
-  });
-
-  it('should NOT reload when history is already loaded (persisted slice)', () => {
-    store.overrideSelector(selectStatus, 'loaded');
-    store.refreshState();
-
-    const dispatchSpy = jest.spyOn(store, 'dispatch');
-    TestBed.createComponent(TransactionsListComponent);
-    expect(dispatchSpy).not.toHaveBeenCalled();
+    expect(facade.load).toHaveBeenCalledTimes(1);
   });
 
   it('should render one row per transaction with recipient and CAD amount', () => {
@@ -88,8 +75,7 @@ describe('TransactionsListComponent', () => {
   });
 
   it('should show an empty message when there are no transactions', () => {
-    store.overrideSelector(selectTransactions, []);
-    store.refreshState();
+    transactions$.next([]);
 
     const fixture = TestBed.createComponent(TransactionsListComponent);
     fixture.detectChanges();

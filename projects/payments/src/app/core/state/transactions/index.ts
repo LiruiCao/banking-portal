@@ -7,3 +7,4 @@ export {
 } from './transactions.reducer';
 export * from './transactions.selectors';
 export { TransactionsEffects } from './transactions.effects';
+export { TransactionFacade } from './transactions.facade';

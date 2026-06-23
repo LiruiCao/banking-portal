@@ -1,11 +1,14 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { Observable, of } from 'rxjs';
 
 import { TransactionsEffects } from './transactions.effects';
 import { TransactionsActions } from './transactions.actions';
+import { selectStatus } from './transactions.selectors';
 import { ETransferActions } from '../e-transfer';
-import { Account, ETransferReceipt, Recipient } from '../../models';
+import { TransactionApiService } from '../../services';
+import { Account, ETransferReceipt, Recipient, Transaction } from '../../models';
 
 const RECIPIENT: Recipient = {
   id: 'rec_02',
@@ -36,28 +39,65 @@ const receipt = (autoDeposit: boolean): ETransferReceipt => ({
   },
 });
 
+const API_TRANSACTIONS: readonly Transaction[] = [
+  {
+    id: 'txn_api_01',
+    date: '2026-05-28T14:22:00Z',
+    recipientName: 'Emily Chen',
+    amountCents: 125_00,
+    currency: 'CAD',
+    status: 'completed',
+  },
+];
+
 describe('TransactionsEffects', () => {
   let actions$: Observable<unknown>;
   let effects: TransactionsEffects;
+  let store: MockStore;
+  // The data-access seam is stubbed: the effect's job is orchestration
+  // (idle guard + mapping), not where the rows come from.
+  const api = { load: jest.fn(() => of(API_TRANSACTIONS)) };
 
   beforeEach(() => {
+    api.load.mockClear();
     TestBed.configureTestingModule({
-      providers: [TransactionsEffects, provideMockActions(() => actions$)],
+      providers: [
+        TransactionsEffects,
+        provideMockActions(() => actions$),
+        provideMockStore({
+          selectors: [{ selector: selectStatus, value: 'idle' }],
+        }),
+        { provide: TransactionApiService, useValue: api },
+      ],
     });
+    store = TestBed.inject(MockStore);
     effects = TestBed.inject(TransactionsEffects);
   });
 
   describe('load$', () => {
-    it('loads the mock history after the simulated latency', fakeAsync(() => {
+    it('loads from the api and maps to loadSucceeded when status is idle', (done) => {
       actions$ = of(TransactionsActions.loadRequested());
 
-      let result: ReturnType<typeof TransactionsActions.loadSucceeded> | undefined;
-      effects.load$.subscribe((a) => (result = a as typeof result));
-      tick(600);
+      effects.load$.subscribe((action) => {
+        expect(action).toEqual(
+          TransactionsActions.loadSucceeded({ transactions: API_TRANSACTIONS }),
+        );
+        expect(api.load).toHaveBeenCalledTimes(1);
+        done();
+      });
+    });
 
-      expect(result?.type).toBe('[Transactions] Load Succeeded');
-      expect(result?.transactions.length).toBe(5);
-    }));
+    it('is a no-op when the history is already loaded (idle guard)', () => {
+      store.overrideSelector(selectStatus, 'loaded');
+      store.refreshState();
+      actions$ = of(TransactionsActions.loadRequested());
+
+      let emitted = false;
+      effects.load$.subscribe(() => (emitted = true));
+
+      expect(emitted).toBe(false);
+      expect(api.load).not.toHaveBeenCalled();
+    });
   });
 
   describe('recordETransfer$ (cross-feature bridge)', () => {
